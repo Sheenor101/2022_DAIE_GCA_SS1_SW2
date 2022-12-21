@@ -74,9 +74,28 @@ min_pre_or #MINIMUM IS 3.35
 max_pre_or <- max (dataset$pre_trial_or)
 max_pre_or #MAXIMUM IS 8.99
 
+###NORMALITY TESTS
 
+#HYSTOGRAM
+hist (dataset$pre_trial_or, col='steelBlue', main='Distribution of pre trial OR scores', xlab='Pre trial OR scores')
+#the distribution doesn't seem normal. Further tests will be carried out.
 
+#Q-Q PLOT
+qqnorm(dataset$pre_trial_or, main='Distribution of pre trial OR scores')
+qqline(dataset$pre_trial_or)
+#the distribution doesn't seem normal. Further tests will be carried out.
 
+#SHAPIRO-WILK TEST
+shapiro.test (dataset$pre_trial_or)
+#p = 0.83, which is higher that 0.05. Therefore, THE DISTRIBUTION IS NOT NORMAL. 
+
+###NORMALISATION
+
+log_scale = log(as.data.frame(dataset[6])) #normalising the data using logarithmic normalisation
+log_scale
+shapiro.test (log_scale$pre_trial_or) #testing if data have been normalised. DATA IS NOW NORMAL (P = 0.01)
+dataset['pre_trial_or'] <- log_scale$pre_trial_or ##replacing new normalise data in the original dataset
+dataset$pre_trial_or
 
 
 
