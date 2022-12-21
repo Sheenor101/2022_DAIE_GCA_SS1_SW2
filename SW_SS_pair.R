@@ -97,6 +97,63 @@ shapiro.test (log_scale$pre_trial_or) #testing if data have been normalised. DAT
 dataset['pre_trial_or'] <- log_scale$pre_trial_or ##replacing new normalise data in the original dataset
 dataset$pre_trial_or
 
+###TESTING HYPOTHESYS
+
+#INDEPENDENT SAMPLE T-TEST
+t_test_results <- t.test (dataset$pre_trial_or ~ dataset$gender, data=dataset, var.equal=FALSE, na.rm=TRUE)
+t_test_results #p < 0.01. H0 IS REJECTED AND H1 HAS TO BE ACCEPTED. THERE IS A SIGNIFICAND DIFFERENCE IN THE AVERAGE PRE TRIAL OR SCARES BETWEEN MALES AND FEMALES.
+#t score = -3.12
+#degrees of freedom (df) = 145.65
+#Female mean = 1.75 and Male mean = 1.84. On average, males have a higher pre trial OR score than females.
+
+###CONFIDENCE INTERVALS
+
+#CONFIDENCE INTERVAL FOR pre_trial_or MEAN
+n <- 150 #we know by the brief that there are 150 patients in the study
+standardised_mean <- mean (dataset$pre_trial_or) #finding mean of pre_trial_or after normalisation
+standardised_mean
+standardised_sd <- sd (dataset$pre_trial_or) #finding the standard deviation of pre_trial_or after normalisation
+standardised_sd
+margin_error <- qt(0.95,df=n-1)*standardised_sd/sqrt(n) #calculating margin error
+margin_error
+lower_pop_interval <- standardised_mean - margin_error
+lower_pop_interval #LOWER CONFIDENCE INTERVAL IS 1.77
+upper_pop_interval <- standardised_mean + margin_error
+upper_pop_interval #UPPER CONFIDENCE INTERVAL IS 1.82
+
+#CONFIDENCE INTERVAL FOR DIFFERENCE IN MEANS BETWEEN FEMALES AND MALES
+mean_female <- 1.75 #as seen in the t-test
+mean_male <- 1.84 #as seen in t-test
+aggregate (dataset$pre_trial_or, list (dataset$gender), FUN=sd) #finding pre_trial_or standard deviation for each gender
+sd_female <- 0.17
+sd_male <- 0.19
+n_f <- 75 #we know from the brief that there are 75 females
+n_m <- 75 #we know from the brief that there are 75 males
+sp <- ((n_f-1)*sd_female^2+(n_m-1)*sd_male^2)/(n_f+n_m-2) #calculating pooled variance
+sp
+margin_error_difference <- qt(0.95,df=n_f+n_m-1)*sqrt(sp/n_f + sp/n_m)
+margin_error_difference
+lower_diff_interval <- (mean_female-mean_male) - margin_error_difference
+lower_diff_interval #LOWER CONFIDENCE INTERVAL IS -0.14
+upper_diff_interval <- (mean_female-mean_male) + margin_error_difference
+upper_diff_interval #UPPER CONFIDENCE INTERVAL IS -0.04
+
+#CONFIDENCE INTERVAL FOR pre_trial_or MEAN FOR FEMALES
+margin_error_female <- qt(0.95,df=n_f-1)*sd_female/sqrt(n_f)
+margin_error_female
+lower_f_interval <- mean_female - margin_error_female
+lower_f_interval #LOWER CONFIDENCE INTERVAL IS 1.72
+upper_f_interval <- mean_female + margin_error_female
+upper_f_interval #UPPER CONFIDENCE INTERVAL IS 1.78
+
+#CONFIDENCE INTERVAL FOR pre_trial_or MEAN FOR MALES
+margin_error_male <- qt(0.95,df=n_m-1)*sd_male/sqrt(n_m)
+margin_error_male
+lower_f_interval <- mean_male - margin_error_male
+lower_f_interval #LOWER CONFIDENCE INTERVAL IS 1.80
+upper_f_interval <- mean_male + margin_error_male
+upper_f_interval #UPPER CONFIDENCE INTERVAL IS 1.88
+
 
 
 
