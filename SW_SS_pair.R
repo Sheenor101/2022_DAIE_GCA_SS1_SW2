@@ -154,8 +154,68 @@ lower_f_interval #LOWER CONFIDENCE INTERVAL IS 1.80
 upper_f_interval <- mean_male + margin_error_male
 upper_f_interval #UPPER CONFIDENCE INTERVAL IS 1.88
 
+###CORRELATION
+#ESTABLISHING HYPOTHESIS
+#H0: there is no correlation between pre and post OR values.
+#H1: there is a significant correlation between pre and post OR values.
 
+#DATA CLEANING
+which (is.na (dataset$post_trial_or)) #NO MISSING VALUES
+between (dataset$post_trial_or, 0, 10) #checking if all values are between 0 and 10. VALUE OUTISE OF RANGE AT LINE 125.
+dataset$post_trial_or[126] #wrong value is 12. 
+dataset$post_trial_or[126] <- 10 #replacing value with maximum value of the scale
+dataset$post_trial_or[126] #checking if the value has changed
 
+#DESCRIPTIVE STATISTICS
+
+mean_post_or <- mean (dataset$post_trial_or)
+mean_post_or #MEAN IS 5,43
+
+median_post_or <- median (dataset$pre_trial_or)
+median_post_or #MEDIAN IS 1.80 
+
+mode_post_or <- getmode (dataset$post_trial_or)
+mode_post_or #MODE IS 5.33
+
+sd_post_or <- sd (dataset$post_trial_or)
+sd_post_or #STANDARD DEVIATION IS 1.15
+
+#INTERQUARTILE RANGE (IQR) AND QUARTILES
+iqr_post_or <- IQR (dataset$post_trial_or) #finding IQR
+iqr_post_or #IQR IS 1.51
+
+quartiles_post_or <- quantile(dataset$post_trial_or, prob=c(.25,.5,.75)) #finding quartiles
+quartiles_post_or #QUARTILES: Q1=4.73, Q2=5.33, Q3=6.25
+
+boxplot (dataset$post_trial_or, data=dataset, main='Box plot of post trial OR scores', ylab='Post trial OR scores') #box plot for post trial OR scores
+
+min_post_or <- min (dataset$post_trial_or)
+min_post_or #MINIMUM IS 2.17
+
+max_post_or <- max (dataset$post_trial_or)
+max_post_or #MAXIMUM IS 10
+
+hist (dataset$post_trial_or, col='steelBlue', main='Distribution of post trial OR scores', xlab='Post trial OR scores')
+#the distribution doesn't seem normal. ut seems slightly right skewed. Further tests will be carried out.
+
+#Q-Q PLOT
+qqnorm(dataset$post_trial_or, main='Distribution of post trial OR scores')
+qqline(dataset$post_trial_or)
+#the distribution doesn't seem normal. Further tests will be carried out.
+
+#SHAPIRO-WILK TEST
+shapiro.test (dataset$post_trial_or)
+#p = 0.047, which is slightly lower that 0.05. Therefore,  we will assume that THE DISTRIBUTION IS NORMAL. 
+
+#CORRELATION
+cor.test (dataset$pre_trial_or, dataset$post_trial_or, method = "pearson") #calculating Pearsosn's correlation
+#CORRELATION COEFFICIENT IS 0.53 with p < 0.001. H0 REJECT IN FAVOUR OF H1. THERE IS A POSITIVE CORRELATION BEWEEN PRE AND POST TRIAL OR SCORES.
+
+plot(dataset$pre_trial_cpss ~ dataset$post_trial_or,
+     data = dataset,
+     main = "Pre VS Post trial OR scores)",
+     xlab = "Pre trial scores",
+     ylab = "Post trial scores")
 
 
 
